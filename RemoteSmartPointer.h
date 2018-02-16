@@ -57,7 +57,7 @@ public:
         try {
             data_ptr[index] = new_item;
         }
-        catch(const std::exception* ex) {
+        catch(const std::exception& ex) {
             return false;
         }
         return true;
