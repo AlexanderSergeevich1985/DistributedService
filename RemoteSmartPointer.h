@@ -423,8 +423,8 @@ public:
                 locker->release_writer();
                 return true;
             }
+            locker->release_writer();
         }
-        locker->release_writer();
         return false;
     }
     Rcount* get_locker_ptr() {
