@@ -401,8 +401,8 @@ public:
                 locker->release_writer();
                 return true;
             }
+            locker->release_writer();
         }
-        locker->release_writer();
         return false;
     }
     bool reset(size_t size) {
