@@ -115,6 +115,22 @@ public:
         compose_msg(uid_object, parcel);
         connection_to_remote_server->write(parcel);
     }
+    const QString get_object_uid() const {
+        return uid_object;
+    }
+    static bool bit_compare_objects(const RemoteDataWraper& first, const RemoteDataWraper& second) {
+        const void* first_ptr = dynamic_cast<const void*>(first.get_data_ptr());
+        const void* second_ptr = dynamic_cast<const void*>(first.get_data_ptr());
+        return memcmp(first_ptr, second_ptr, sizeof(RemoteDataWraper)) == 0;
+    }
+    bool is_contents_equal(const RemoteDataWraper& other) {
+        if(this->data_size != other.data_size) return false;
+        return bit_compare_objects(*this, other);
+    }
+    bool is_equal(const RemoteDataWraper& other) {
+        if(this->uid_object.compare(other.get_object_uid(), Qt::CaseSensitive) != 0) return false;
+        return is_contents_equal(other);
+    }
 public slots:
     void connected() {
         qDebug() << "Connection to server has been established";
