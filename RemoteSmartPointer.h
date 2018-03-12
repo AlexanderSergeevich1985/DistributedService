@@ -171,7 +171,8 @@ struct Rcount {
         count++;
     }
     int Release() {
-        return --count;
+        if(count > 0) --count;
+        return count;
     }
     int count_hold() {
         return count;
