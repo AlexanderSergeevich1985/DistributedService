@@ -48,7 +48,7 @@ public:
         qsrand(gen_process());
         /*Generate random numbers n times*/
         for(int i = 0; i < times; ++i) {
-            qsrand(qrand() + std::pow(-1, i)*timer.nsecsElapsed());
+            qsrand(qrand() + std::pow(-1, qrand()%2)*timer.nsecsElapsed());
             rand_values.append(qrand());
         }
         /*Shuffle random numbers and retrieve one*/
