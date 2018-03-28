@@ -72,7 +72,7 @@ public:
     }
     /*Random number main generating process with limited number of repeats*/
     int rand_gen_cycle_limited(const uint max_times = MAXRANDTIMES) {
-        uint times = rand_int_limited(MINRANDTIMES, max_times);
+        uint times = INTTOUINT(rand_int_limited(MINRANDTIMES, max_times));
         return rand_gen_cycle(times);
     }
     virtual int get_number() {
@@ -80,7 +80,7 @@ public:
     }
     /*Arbitrary limited value generating process with limited number of repeats*/
     int rand_int_cycle_limited(int low, int high) {
-        uint times = rand_int_limited(MINRANDTIMES, MAXRANDTIMES);
+        uint times = INTTOUINT(rand_int_limited(MINRANDTIMES, MAXRANDTIMES));
         return rand_gen_cycle(times) % ((high + 1) - low) + low;
     }
 };
