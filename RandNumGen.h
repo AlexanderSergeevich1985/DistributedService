@@ -85,4 +85,59 @@ public:
     }
 };
 
+class RandStrGen : public BaseRandNumGen {
+public:
+    virtual ~ RandStrGen() {}
+    /*Generate string containing only alphabetical symbols*/
+    QString get_alphaStr(const size_t str_length) {
+        QString password;
+        uint char_number;
+        for(uint i = 0; i < str_length; ++i) {
+            while(true){
+                char_number = rand_int_cycle_limited(65, 122);
+                if((char_number >= 65 && char_number <= 90) || (char_number >= 97 && char_number <= 122)) {
+                    password.append((char)char_number);
+                    break;
+                }
+            }
+        }
+        return password;
+    }
+    /*Generate string containing alphabetical and digital symbols*/
+    QString get_alphaNumStr(const size_t str_length) {
+        QString password;
+        uint char_number;
+        for(uint i = 0; i < str_length; ++i) {
+            while(true){
+                char_number = rand_int_cycle_limited(48, 122);
+                if(isalnum(char_number)) {
+                    password.append((char)char_number);
+                    break;
+                }
+            }
+        }
+        return password;
+    }
+    /*Generate string containing alphabetical, digital and special symbols*/
+    QString get_withSpecCharStr(const size_t str_length) {
+        QString password;
+        uint char_number;
+        for(uint i = 0; i < str_length; ++i) {
+            char_number = rand_int_cycle_limited(33, 126);
+            password.append((char)char_number);
+        }
+        return password;
+    }
+    /*Generate string containing only allowed symbols*/
+    QString get_allowedSymbolsStr(const size_t str_length, QString symbols = QString("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")) {
+        QString password;
+        uint char_index;
+        for(uint i = 0; i < str_length; ++i) {
+            char_index = (uint) rand_int_cycle_limited(0, symbols.size()-1);
+            password.append(symbols.at(char_index));
+        }
+        return password;
+    }
+};
+
 #endif // CERTIFICATE_H
