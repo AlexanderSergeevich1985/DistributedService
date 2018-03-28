@@ -19,6 +19,7 @@ SOFTWARE.
 #ifndef CERTIFICATE_H
 #define CERTIFICATE_H
 #include <QTime>
+#include <QElapsedTimer>
 #include <algorithm>
 #include <QDebug>
 
@@ -41,11 +42,13 @@ public:
     }
     /*Random number main generating process*/
     int rand_gen_cycle(const uint times) {
+        QElapsedTimer timer;
+        timer.start();
         QList<uint> rand_values;
         qsrand(gen_process());
         /*Generate random numbers n times*/
         for(int i = 0; i < times; ++i) {
-            qsrand(qrand());
+            qsrand(qrand() + std::pow(-1, i)*timer.nsecsElapsed());
             rand_values.append(qrand());
         }
         /*Shuffle random numbers and retrieve one*/
