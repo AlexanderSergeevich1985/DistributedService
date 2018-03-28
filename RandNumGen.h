@@ -103,6 +103,16 @@ public:
         }
         return password;
     }
+    /*Generate string containing only digital symbols*/
+    QString get_digitalStr(const size_t str_length) {
+        QString password;
+        uint char_number;
+        for(uint i = 0; i < str_length; ++i) {
+            char_number = rand_int_cycle_limited(48, 57);
+            password.append((char)char_number);
+        }
+        return password;
+    }
     /*Generate string containing alphabetical and digital symbols*/
     QString get_alphaNumStr(const size_t str_length) {
         QString password;
