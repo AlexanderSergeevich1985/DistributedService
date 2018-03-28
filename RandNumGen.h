@@ -23,12 +23,19 @@ SOFTWARE.
 #include <algorithm>
 #include <QDebug>
 
+#define INTTOUINT(a) (a >= 0) ? a : -a
 #define MINRANDTIMES 5
 #define MAXRANDTIMES 20
 
-class RandNumGen {
+class IRandNumGen {
 public:
-    virtual ~RandNumGen() {
+    virtual uint gen_process() = 0;
+    virtual int get_number() = 0;
+};
+
+class BaseRandNumGen : public IRandNumGen {
+public:
+    virtual ~BaseRandNumGen() {
     }
     /*Generate value for initializing random number generating process*/
     virtual uint gen_process() {
@@ -44,22 +51,22 @@ public:
     int rand_gen_cycle(const uint times) {
         QElapsedTimer timer;
         timer.start();
-        QList<uint> rand_values;
+        QList<int> rand_values;
         qsrand(gen_process());
         /*Generate random numbers n times*/
         for(int i = 0; i < times; ++i) {
-            qsrand(qrand() + std::pow(-1, qrand()%2)*timer.nsecsElapsed());
+            qsrand(INTTOUINT(qrand() + std::pow(-1, qrand()%2)*timer.nsecsElapsed()));
             rand_values.append(qrand());
         }
         /*Shuffle random numbers and retrieve one*/
         std::random_shuffle(rand_values.begin(), rand_values.end());
-        uint first = rand_values.takeFirst();
+        int first = rand_values.takeFirst();
         /*Shuffle random numbers and retrieve one*/
         std::random_shuffle(rand_values.begin(), rand_values.end());
-        uint second = rand_values.takeFirst();
-        uint min_value = std::min(first, second);
-        uint max_value = std::max(first, second);
-        qsrand(qrand());
+        int second = rand_values.takeFirst();
+        int min_value = std::min(first, second);
+        int max_value = std::max(first, second);
+        qsrand(INTTOUINT(qrand()));
         /*Generate output random number*/
         return qrand() % ((max_value + 1) - min_value) + min_value;
     }
@@ -67,6 +74,9 @@ public:
     int rand_gen_cycle_limited(const uint max_times = MAXRANDTIMES) {
         uint times = rand_int_limited(MINRANDTIMES, max_times);
         return rand_gen_cycle(times);
+    }
+    virtual int get_number() {
+        return rand_gen_cycle_limited();
     }
     /*Arbitrary limited value generating process with limited number of repeats*/
     int rand_int_cycle_limited(int low, int high) {
