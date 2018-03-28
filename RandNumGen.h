@@ -21,7 +21,6 @@ SOFTWARE.
 #include <QTime>
 #include <algorithm>
 #include <QDebug>
-#include <iostream>
 
 #define MINRANDTIMES 5
 #define MAXRANDTIMES 20
@@ -47,9 +46,7 @@ public:
         /*Generate random numbers n times*/
         for(int i = 0; i < times; ++i) {
             qsrand(qrand());
-            uint value = qrand();
-            std::cout << "New value: " << value << std::endl;
-            rand_values.append(value);
+            rand_values.append(qrand());
         }
         /*Shuffle random numbers and retrieve one*/
         std::random_shuffle(rand_values.begin(), rand_values.end());
