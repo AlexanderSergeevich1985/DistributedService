@@ -75,7 +75,6 @@ struct Data_wraper_base : public Idata_wraper {
         object_data.clear();
         QDataStream stream(&object_data, QIODevice::WriteOnly);
         stream.writeRawData((char*)(data_ptr.data()), sizeof(*(data_ptr.data())));
-        qDebug() << "Data size: " << object_data.size();
         return QString(QCryptographicHash::hash(object_data, QCryptographicHash::Md5).toHex());
     }
     virtual void set_state(unsigned int state) {
