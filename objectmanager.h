@@ -22,9 +22,9 @@ struct Idata_wraper {
     virtual void set_state(unsigned int state) = 0;
     virtual void set_state_with_check(unsigned int state) = 0;
     virtual const unsigned int get_state() const = 0;
-    virtual bool is_acsessible() = 0;
-    virtual bool is_readible() = 0;
-    virtual bool is_writible() = 0;
+    virtual bool is_acsessible() const = 0;
+    virtual bool is_readible() const = 0;
+    virtual bool is_writible() const = 0;
     virtual void reset() = 0;
 };
 
@@ -87,13 +87,13 @@ struct Data_wraper_base : public Idata_wraper {
     virtual const unsigned int get_state() const {
         return this->state;
     }
-    virtual bool is_acsessible() {
+    virtual bool is_acsessible() const {
         return state == blocked ? false : true;
     }
-    virtual bool is_readible() {
+    virtual bool is_readible() const {
         return state == readable ? true : false;
     }
-    virtual bool is_writible() {
+    virtual bool is_writible() const {
         return state == writable ? true : false;
     }
     virtual void reset() {
