@@ -65,10 +65,6 @@ public:
     QSharedPointer<Idata_wraper> get_data_container() {
         return arguments;
     }
-    template<typename T>
-    void add_argument(const QString& key, const T& val) {
-        //this->arguments->set(key, val);
-    }
 private:
     QSharedPointer<QObject> object;
     QString action_id;
