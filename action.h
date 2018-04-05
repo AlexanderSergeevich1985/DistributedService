@@ -23,7 +23,6 @@ SOFTWARE.
 #include <QSharedPointer>
 #include <QTimer>
 #include <QDebug>
-
 #include "objectmanager.h"
 
 class IAction : public QObject {
