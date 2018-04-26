@@ -44,6 +44,15 @@ struct Idata_wraper {
     virtual bool is_readible() const = 0;
     virtual bool is_writible() const = 0;
     virtual void reset() = 0;
+    virtual void* Value() = 0;
+    template<class T>
+    bool isConvertable() {
+        return typeid(T) == type_info();
+    }
+    template<class T>
+    T* value() {
+        return static_cast<T*>(Value());
+    }
 };
 
 /*
@@ -67,7 +76,7 @@ struct Data_wraper_base : public Idata_wraper {
     }
     virtual ~Data_wraper_base() {}
     virtual const std::type_info& type_info() const {
-        return typeid(data_ptr.data());
+        return typeid(*data_ptr.data());
     }
     virtual const std::string type_identificator() const {
         return type.toStdString();
@@ -121,10 +130,38 @@ struct Data_wraper_base : public Idata_wraper {
             this->type = QString("Undefined");
         }
     }
+    virtual void* Value() {
+        return static_cast<void*>(data_ptr.data());
+    }
 private:
     QString type;
     std::atomic<unsigned int> state;
     QSharedPointer<T> data_ptr;
+};
+
+/*Container for storing set of different objects used in work operation*/
+class BaseDataContainer {
+public:
+    void set(const QString& key, Idata_wraper* val) {
+        QSharedPointer<Idata_wraper> val_ptr(val);
+        map_vals.insert(key, val_ptr);
+    }
+    template<typename T>
+    T* get(const QString& key, T* defVal = new T()) {
+        if(map_vals.contains(key)) {
+            return unpack<T>(map_vals[key], defVal);
+        }
+        return defVal;
+    }
+    template<typename T>
+    T* unpack(const QSharedPointer<Idata_wraper>& wrap_ptr, T* defVal = new T()) {
+        if(!wrap_ptr.isNull() && wrap_ptr->isConvertable<T>()) {
+            return wrap_ptr->value<T>();
+        }
+        return defVal;
+    }
+private:
+    QMap<QString, QSharedPointer<Idata_wraper> > map_vals;
 };
 
 #endif // OBJECTMANAGER_H
