@@ -84,6 +84,11 @@ struct FileMapper {
         very_large
     };
     struct ChunkState {
+        ChunkState(const size_t offset_ = 0, const size_t chunk_size = 0) {
+            offset = offset_*chunk_size;
+            bytes_left = chunk_size;
+        }
+        
         bool isDownloaded() const {
             return bytes_left == 0 ? true : false;
         }
@@ -107,10 +112,13 @@ struct FileMapper {
         else if(size < 524288000)
             size_type = very_large;
         next_chunk = 0;
+        for(size_t i = 0; i < chunk_count; ++i) {
+            chunk_map.insert(i, *(new ChunkState(i, CHUNK_SIZE)));
+        }
     }
     bool chunk_state(size_t chunk_id) {
         if(!chunk_map.contains(chunk_id)) return false;
-        return chunk_map.value(chunk_id).isDownloaded();
+        return chunk_map[chunk_id].isDownloaded();
     }
     bool isDownloaded() const {
         QMapIterator<size_t, ChunkState> iter(chunk_map);
@@ -127,9 +135,11 @@ struct FileMapper {
         if(next_chunk != chunk_count) ++next_chunk;
         return next_chunk;
     }
-    void set_chunk_state(const size_t chunk_id, const size_t bytes_written) {
+    bool set_chunk_state(const size_t chunk_id, const size_t bytes_written) {
+        if(!chunk_map.contains(chunk_id)) return false;
         chunk_map[chunk_id].change_state(bytes_written);
         if(chunk_map[chunk_id].isDownloaded()) finished_chunk.insert(chunk_id, chunk_id);
+        return true;
     }
 private:
     size_t chunk_count;
