@@ -98,7 +98,7 @@ struct FileMapper {
 
     void init_mapper(size_t& size) {
         if(size == 0) return;
-        chunk_count = (size == CHUNK_SIZE ? size/CHUNK_SIZE : size/CHUNK_SIZE + 1);
+        chunk_count = (size%CHUNK_SIZE == 0 ? size/CHUNK_SIZE : size/CHUNK_SIZE + 1);
         ending_size = size % CHUNK_SIZE;
         if(size < 1024)
             size_type = small;
