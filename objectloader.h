@@ -76,4 +76,68 @@ private:
     Object_Desc obj_desc;
 };
 
+struct FileMapper {
+    enum SizeTypes {
+        small = 0,
+        middle,
+        large,
+        very_large
+    };
+    struct ChunkState {
+        bool isDownloaded() const {
+            return bytes_left == 0 ? true : false;
+        }
+        bool change_state(const size_t& bytes_written) {
+            if(bytes_written > bytes_left) return false;
+            bytes_left -= bytes_written;
+        }
+        size_t offset;
+        size_t bytes_left;
+    };
+    virtual ~FileMapper() {}
+
+    void init_mapper(size_t& size) {
+        if(size == 0) return;
+        chunk_count = (size == CHUNK_SIZE ? size/CHUNK_SIZE : size/CHUNK_SIZE + 1);
+        ending_size = size % CHUNK_SIZE;
+        if(size < 1024)
+            size_type = small;
+        else if(size < 1048576)
+            size_type = middle;
+        else if(size < 524288000)
+            size_type = very_large;
+        next_chunk = 0;
+    }
+    bool chunk_state(size_t chunk_id) {
+        if(!chunk_map.contains(chunk_id)) return false;
+        return chunk_map.value(chunk_id).isDownloaded();
+    }
+    bool isDownloaded() const {
+        QMapIterator<size_t, ChunkState> iter(chunk_map);
+        while(iter.hasNext()) {
+            iter.next();
+            if(!iter.value().isDownloaded()) return false;
+        }
+        return true;
+    }
+    bool has_next_chunk() const {
+        return next_chunk == chunk_count ? false : true;
+    }
+    size_t get_next_chunk() {
+        if(next_chunk != chunk_count) ++next_chunk;
+        return next_chunk;
+    }
+    void set_chunk_state(const size_t chunk_id, const size_t bytes_written) {
+        chunk_map[chunk_id].change_state(bytes_written);
+        if(chunk_map[chunk_id].isDownloaded()) finished_chunk.insert(chunk_id, chunk_id);
+    }
+private:
+    size_t chunk_count;
+    size_t ending_size;
+    size_t next_chunk;
+    SizeTypes size_type;
+    QMap<size_t, ChunkState> chunk_map;
+    QList<size_t> finished_chunk;
+};
+
 #endif // OBJECTLOADER_H
