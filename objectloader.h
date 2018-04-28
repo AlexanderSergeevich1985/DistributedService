@@ -186,8 +186,15 @@ public:
         storage.clear();
         meta_storage.clear();
     }
+    virtual void reset() {
+        this->clear();
+        strg_used_space = 0;
+    }
     virtual QSharedPointer<RawObject> get_object(const QString& object_id) {
         return storage[object_id];
+    }
+    virtual Object_Desc get_object_desc(const QString& object_id) {
+        return meta_storage[object_id];
     }
 private:
     size_t strg_used_space;
