@@ -25,6 +25,10 @@ SOFTWARE.
 
 #include "objectmanager.h"
 
+#define CHUNK_SIZE 1024
+#define DEFAULT_STORAGE_SIZE 1024
+#define MAX_STORAGE_CAPACITY 104857600
+
 struct Object_Desc {
     virtual ~Object_Desc() {}
 
@@ -39,7 +43,9 @@ struct Object_Desc {
 };
 
 struct Sources_Desc {
-    virtual ~Sources_Desc() {}
+    virtual ~Sources_Desc() {
+        sources.clear();
+    }
 
     QList<QUrl> sources;
 };
@@ -51,9 +57,9 @@ public:
     virtual ~RawObject() {
         delete raw_data;
     }
-    virtual void init_object(const size_t& size) {
-        raw_data = new char[size];
-        obj_desc.obj_size = size;
+    virtual void init_object(Object_Desc* obj_desc_ptr) {
+        obj_desc.reset(obj_desc_ptr);
+        raw_data = new char[obj_desc->obj_size];
     }
     virtual bool isDownloaded() {
         return is_Downloaded;
@@ -73,7 +79,7 @@ private:
     char* raw_data;
     bool is_Downloaded;
     size_t bytes_loaded;
-    Object_Desc obj_desc;
+    QSharedPointer<Object_Desc> obj_desc;
 };
 
 struct FileMapper {
@@ -148,6 +154,45 @@ private:
     SizeTypes size_type;
     QMap<size_t, ChunkState> chunk_map;
     QList<size_t> finished_chunk;
+};
+
+class LocalDataStore : public QObject {
+    Q_OBJECT
+public:
+    LocalDataStore(const size_t strg_vol = DEFAULT_STORAGE_SIZE, QObject* parent = NULL) : QObject(parent) {
+        strg_used_space = 0;
+        storage.reserve(strg_vol);
+        meta_storage.reserve(strg_vol);
+    }
+    virtual ~LocalDataStore() {
+        this->clear();
+    }
+
+    virtual bool register_object(const Object_Desc& obj_desc) {
+        if(strg_used_space + obj_desc.obj_size > MAX_STORAGE_CAPACITY) return false;
+        meta_storage.insert(obj_desc.object_id, obj_desc);
+        QSharedPointer<RawObject> raw_obj_ptr(new RawObject());
+        raw_obj_ptr->init_object(&meta_storage[obj_desc.object_id]);
+        storage.insert(obj_desc.object_id, raw_obj_ptr);
+        strg_used_space += obj_desc.obj_size;
+        return true;
+    }
+    virtual void unregister_object(const QString& object_id) {
+        strg_used_space -= meta_storage[object_id].obj_size;
+        meta_storage.remove(object_id);
+        storage.remove(object_id);
+    }
+    virtual void clear() {
+        storage.clear();
+        meta_storage.clear();
+    }
+    virtual QSharedPointer<RawObject> get_object(const QString& object_id) {
+        return storage[object_id];
+    }
+private:
+    size_t strg_used_space;
+    QHash<QString, QSharedPointer<RawObject> > storage;
+    QHash<QString, Object_Desc> meta_storage;
 };
 
 #endif // OBJECTLOADER_H
