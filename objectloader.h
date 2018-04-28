@@ -202,4 +202,50 @@ private:
     QHash<QString, Object_Desc> meta_storage;
 };
 
+class GlobalDataStore : public QObject {
+    Q_OBJECT
+public:
+    GlobalDataStore(const size_t strg_vol = DEFAULT_STORAGE_SIZE, QObject* parent = NULL) : QObject(parent) {
+    }
+    virtual ~GlobalDataStore() {
+        this->clear();
+    }
+
+    virtual void clear() {
+        local_record_strg.clear();
+        global_record_strg.clear();
+    }
+    virtual void add_record_global(const QString& object_id, Sources_Desc& sources_desc) {
+        global_record_strg.insert(object_id, sources_desc);
+    }
+    virtual void add_record_local(const QString& object_id, Sources_Desc& sources_desc) {
+        local_record_strg.insert(object_id, sources_desc);
+    }
+    virtual bool transfer_from_global_to_local(const QString& object_id) {
+        if(!global_record_strg.contains(object_id)) return false;
+        local_record_strg.insert(object_id, global_record_strg[object_id]);
+        global_record_strg.remove(object_id);
+        return true;
+    }
+    virtual bool transfer_from_local_to_global(const QString& object_id) {
+        if(!local_record_strg.contains(object_id)) return false;
+        global_record_strg.insert(object_id, local_record_strg[object_id]);
+        local_record_strg.remove(object_id);
+        return true;
+    }
+    virtual bool record_exist_global(const QString& object_id, QSharedPointer<Sources_Desc>& sources_desc) {
+        if(!global_record_strg.contains(object_id)) return false;
+        sources_desc.reset(&global_record_strg[object_id]);
+        return true;
+    }
+    virtual bool record_exist_local(const QString& object_id, QSharedPointer<Sources_Desc>& sources_desc) {
+        if(!local_record_strg.contains(object_id)) return false;
+        sources_desc.reset(&local_record_strg[object_id]);
+        return true;
+    }
+private:
+    QHash<QString, Sources_Desc> local_record_strg;
+    QHash<QString, Sources_Desc> global_record_strg;
+};
+
 #endif // OBJECTLOADER_H
