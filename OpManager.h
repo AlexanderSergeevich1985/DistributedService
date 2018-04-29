@@ -41,7 +41,7 @@ public:
         ++signal_count;
     }
     virtual void register_confirmation(const QString guardian_id, bool guardian_state = false) {
-        conditions->op_confirmation.insert(action->get_action_id(), guardian_state);
+        conditions->op_confirmation.insert(guardian_id, guardian_state);
     }
     virtual void register_confirmation(const IAction* action) {
         conditions->op_confirmation.insert(action->get_action_id(), false);
