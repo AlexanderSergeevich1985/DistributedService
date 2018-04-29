@@ -57,7 +57,7 @@ public:
     }
 public slots:
     void dataset_ready(const QStringList& dataset_id) {
-        this->conditions->in_data_available.insert(dataset_id.pop_front(), dataset_id.pop_front());
+        this->conditions->in_data_available.insert(dataset_id.first(), dataset_id.back());
         ++num_recieved_signal;
         if(num_recieved_signal >= signal_count) check_state();
     }
