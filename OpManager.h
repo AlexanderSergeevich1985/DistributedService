@@ -51,6 +51,9 @@ public:
     virtual void register_out_action(const IAction* action) {
         connect(this, SIGNAL(start(void)), action, SLOT(execute(void)));
     }
+    virtual void register_out_command(const ICommand* command) {
+        connect(this, SIGNAL(start(void)), command, SLOT(Execute(void)));
+    }
     /*if all conditions satisfied starting next action*/
     virtual void check_state() {
         if(conditions->conditions_satisfy()) emit start();
