@@ -33,6 +33,7 @@ public:
     }
     virtual ~IAction() {}
     virtual bool Execute_command() = 0;
+    virtual const QString get_action_id() const = 0;
     void set_is_allowed(const bool is_Allowed) {
         is_allowed = is_Allowed;
     }
