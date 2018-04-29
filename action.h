@@ -127,7 +127,8 @@ public:
     const QString get_command_id() const {
         return command_id;
     }
-    void Execute() {
+public slots:
+    void Execute(void) {
         if(is_allowed) emit execute_command();
     }
 signals:
