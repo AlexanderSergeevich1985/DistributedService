@@ -26,6 +26,7 @@ struct Conditions {
     QMap<QString, QString> in_data_available;
 };
 
+/*For waiting while all conditions needed for starting new action will be satisfied*/
 class WorkFlowCollector : public QObject {
     Q_OBJECT
 public:
@@ -50,6 +51,7 @@ public:
     virtual void register_out_action(const IAction* action) {
         connect(this, SIGNAL(start(void)), action, SLOT(execute(void)));
     }
+    /*if all conditions satisfied starting next action*/
     virtual void check_state() {
         if(conditions->conditions_satisfy()) emit start();
     }
