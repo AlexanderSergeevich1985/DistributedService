@@ -21,6 +21,7 @@ struct Conditions {
         while(ind_iter != in_data_available.end()) {
             if(ind_iter.value() == QString("Undefined")) return false;
         }
+        return true;
     }
     QMap<QString, bool> op_confirmation;
     QMap<QString, QString> in_data_available;
