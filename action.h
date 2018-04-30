@@ -46,6 +46,8 @@ public slots:
     }
 signals:
     void error(const char* err);
+    void dataset_ready(const QStringList& dataset_id);
+    void op_ready(const QString& dataset_id);
 private:
     bool is_allowed;
 };
