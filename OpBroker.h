@@ -26,7 +26,6 @@ SOFTWARE.
 #define FORGET_TIME 1000000
 #define FAULT_THRESHOLD 1000000
 
-
 /*Fault descriptor*/
 struct Fault_desc {
     virtual ~Fault_desc() {}
