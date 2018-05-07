@@ -1,5 +1,5 @@
-#ifndef COMMUNICATION_H
-#define COMMUNICATION_H
+#ifndef CONNECTION_H
+#define CONNECTION_H
 #pragma once
 #include <QtNetwork>
 
@@ -204,4 +204,4 @@ private:
     QSharedPointer<QSslSocket> socket_ptr;
 };
 
-#endif // COMMUNICATION_H
+#endif // CONNECTION_H
