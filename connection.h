@@ -35,7 +35,7 @@ public:
 class TCPConnection : public QObject {
     Q_OBJECT
 public:
-    explicit TCPConnection(IStreamParser* parser = NULL, QObject* parent = NULL) : QObject(parent) {
+    TCPConnection(IStreamParser* parser = NULL, QObject* parent = NULL) : QObject(parent) {
         socket_ptr.reset(new QTcpSocket(this));
         setup_socket();
         parser_ptr.reset(parser);
@@ -117,7 +117,7 @@ private:
 class SSLConnection : public QObject {
     Q_OBJECT
 public:
-    explicit SSLConnection(IStreamParser* parser = NULL, QObject* parent = NULL) : QObject(parent) {
+    SSLConnection(IStreamParser* parser = NULL, QObject* parent = NULL) : QObject(parent) {
         socket_ptr.reset(new QSslSocket(this));
         setup_socket();
         parser_ptr.reset(parser);
