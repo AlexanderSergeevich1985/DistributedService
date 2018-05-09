@@ -74,6 +74,7 @@ struct SimpleNodeStatistic {
 
 /*Circuit breaker programming pattern implementation*/
 class BaseCircuitBreaker : public QObject {
+    Q_OBJECT
 public:
     enum CircuitState {
         Closed = 0,
