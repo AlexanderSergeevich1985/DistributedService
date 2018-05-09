@@ -35,6 +35,10 @@ public:
 class TCPConnection : public QObject {
     Q_OBJECT
 public:
+    TCPConnection(QTcpSocket* socket, QObject* parent = NULL) : QObject(parent) {
+        socket_ptr.reset(socket);
+        setup_socket();
+    }
     TCPConnection(IStreamParser* parser = NULL, QObject* parent = NULL) : QObject(parent) {
         socket_ptr.reset(new QTcpSocket(this));
         setup_socket();
