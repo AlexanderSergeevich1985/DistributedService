@@ -91,6 +91,7 @@ public:
                 write_queue_id = 1;
             }
         }
+        return true;
     }
 private:
     std::atomic<int> read_queue_id;
