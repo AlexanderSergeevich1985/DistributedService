@@ -24,11 +24,19 @@ SOFTWARE.
 
 #include <atomic>
 
+template<class T>
+class IExchangeBuffer {
+public:
+    virtual ~IExchangeBuffer() {}
+
+    virtual bool try_to_read_item(QSharedPointer<T>& item) = 0;
+    virtual bool add_item(QSharedPointer<T>& item) = 0;
+};
 
 template<class T>
-class ExchangeBuffer {
+class BaseExchangeBuffer : public IExchangeBuffer<T> {
 public:
-    virtual ~ExchangeBuffer() {
+    virtual ~BaseExchangeBuffer() {
         reset();
     }
 
@@ -51,12 +59,18 @@ public:
         if(read_queue_id == 0)
             return false;
         else if(read_queue_id == 1) {
-            if(first_queue.isEmpty()) return false;
+            if(first_queue.isEmpty()) {
+                read_queue_id = 0;
+                return false;
+            }
             item = first_queue.dequeue();
             if(first_queue.isEmpty()) read_queue_id = 0;
         }
         else if(read_queue_id == 2) {
-            if(second_queue.isEmpty()) return false;
+            if(second_queue.isEmpty()) {
+                read_queue_id = 0;
+                return false;
+            }
             item = second_queue.dequeue();
             if(second_queue.isEmpty()) read_queue_id = 0;
         }
