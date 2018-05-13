@@ -21,7 +21,7 @@ SOFTWARE.
 #pragma once
 #include <QtCore>
 
-#define DEFAULT_MEASUREMENT_QUEUE_SIZE 100
+#define DEFAULT_MEASUREMENT_QUEUE_SIZE 10
 
 /*Interface of performance predictor*/
 template<int state_size = 5, class T = double>
