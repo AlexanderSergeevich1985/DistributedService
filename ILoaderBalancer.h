@@ -100,10 +100,11 @@ public:
         return true;
     }
     virtual bool calc_new_state() = 0;
-private:
+protected:
     QVector<T> state;
-    QVector<T> coefficient_state_to_score;
     QQueue<QSharedPointer<Measurement> > measurements;
+private:
+    QVector<T> coefficient_state_to_score;
 };
 
 /*Node performance descriptor*/
