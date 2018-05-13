@@ -90,7 +90,7 @@ public:
         return score;
     }
     virtual bool update_state(const QList<T>& measurement) {
-        if(measurements.size() > DEFAULT_MEASUREMENT_QUEUE_SIZE) {
+        if(measurements.size() >= DEFAULT_MEASUREMENT_QUEUE_SIZE) {
             measurements.dequeue().reset();
         }
         QSharedPointer<Measurement> new_measurement_ptr(new Measurement());
