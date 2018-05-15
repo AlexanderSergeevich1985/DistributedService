@@ -213,9 +213,9 @@ public:
         if(auto_delete && next_req_desc.type == RequestDesc::ReadReplica && next_req_desc.req_rep_version > recent_deleted_replica_version) {
             RequestDesc new_req_desc;
             new_req_desc.req_node_id = get_node_holder_id();
-            ++recent_deleted_replica_version;
             new_req_desc.req_rep_version = recent_deleted_replica_version;
             request_queue.enqueue(new_req_desc);
+            ++recent_deleted_replica_version;
         }
         return true;
     }
