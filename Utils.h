@@ -26,7 +26,7 @@ public:
         if(filled < size)
             data_ptr.data()[filled] = item;
         else if(next_chunk_ptr.isNull()) {
-            next_chunk_ptr.reset(new MixArray<T>());
+            next_chunk_ptr.reset(new MixArray<T>(size*STEP));
             next_chunk_ptr->add_item(item);
         }
         else
