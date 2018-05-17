@@ -49,7 +49,7 @@ public:
         if(index < filled)
             item = data_ptr.data()[index];
         else if(!next_chunk_ptr.isNull()) {
-            item = data_ptr.data()[index - size];
+            return next_chunk_ptr->get_item(index - size, item);
         }
         else {
             return false;
