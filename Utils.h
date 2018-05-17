@@ -8,6 +8,7 @@
 
 namespace specialstruct {
 
+/*Mixture of dynamic array and linked list data structure*/
 template<class T = double>
 class MixArray {
 public:
