@@ -18,9 +18,21 @@ public:
     virtual ~MixArray() {
         reset();
     }
-
-    virtual void reset() {
-        data_ptr.reset();
+    
+    virtual void reset(const unsigned int init_size = 0) {
+        if(!next_chunk_ptr.isNull()) {
+            next_chunk_ptr->reset();
+            next_chunk_ptr.reset();
+        }
+        if(!data_ptr.isNull()) {
+            filled = 0;
+            size = init_size;
+            if(init_size != 0) {
+                data_ptr.reset(new T[init_size]());
+            }
+            else
+                data_ptr.reset();
+        }
     }
     virtual void add_item(T& item) {
         ++filled;
