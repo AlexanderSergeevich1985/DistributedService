@@ -25,6 +25,10 @@ SOFTWARE.
 
 #define DEFAULTBUCKETSIZE 100
 
+/*In this data structure data storing in sorted order.
+If data structure is full when adding a new value one value remove from left or right side structure
+what depends from insertion position new element*/
+
 template<class T = int>
 struct DataBucket {
     explicit DataBucket(unsigned int size_ = DEFAULTBUCKETSIZE) : filled(0) {
