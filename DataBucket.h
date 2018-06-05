@@ -129,5 +129,40 @@ private:
     unsigned int filled;
 };
 
+template<class T = int>
+struct DataBucketsLink {
+    virtual ~DataBucketsLink() {
+        reset();
+    }
+
+    virtual void reset() {
+        if(!left_bucket.isNull()) left_bucket.reset();
+        if(!right_bucket.isNull()) right_bucket.reset();
+    }
+    void set_left_bucket(QSharedPointer<DataBucket<T>>& left_bucket_) {
+        left_bucket = left_bucket_;
+    }
+    void set_right_bucket(QSharedPointer<DataBucket<T>>& right_bucket_) {
+        right_bucket = right_bucket_;
+    }
+    QSharedPointer<DataBucket<T>> get_left_bucket() {
+        return left_bucket;
+    }
+    QSharedPointer<DataBucket<T>> get_right_bucket() {
+        return right_bucket;
+    }
+    bool is_left_bucket() {
+        if(left_bucket.isNull()) return false;
+        return true;
+    }
+    bool is_right_bucket() {
+        if(right_bucket.isNull()) return false;
+        return true;
+    }
+private:
+    QSharedPointer<DataBucket<T>> left_bucket;
+    QSharedPointer<DataBucket<T>> right_bucket;
+};
+
 #endif // DATABUCKET
 
