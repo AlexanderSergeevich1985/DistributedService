@@ -30,7 +30,7 @@ Rectangle {
     property double ratioY: screen_height/height
     property double screen_width: 2560
     property double screen_height: 1240
-    id: ImVViewerId
+    id: imageVideoViewerId
     focus: true
     anchors.left: parent.left;
     anchors.right: parent.right;
