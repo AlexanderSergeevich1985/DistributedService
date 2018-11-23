@@ -27,7 +27,7 @@ SOFTWARE.
 
 namespace MediaTools {
 
-class a : public QObject {
+class VideoTools : public QObject {
     Q_OBJECT
 public:
     VideoTools(QObject* parent = 0);
